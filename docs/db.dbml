@@ -1,0 +1,45 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+CpuLog: Table to store CPU usage logs
+FileLog: Table to correlate files with CPU logs
+FileUpload: Table to store file uploads
+User: Table to store user information
+'''
+}
+
+Table CpuLog {
+    id INTEGER [primary key]
+    timestamp DATETIME 
+    usage_percent INTEGER 
+    }
+
+Table FileLog {
+    id INTEGER [primary key]
+    file_upload_id INTEGER 
+    cpu_log_id INTEGER 
+    }
+
+Table FileUpload {
+    id INTEGER [primary key]
+    user_id INTEGER 
+    filename VARCHAR 
+    uploaded_at DATETIME 
+    }
+
+Table User {
+    id INTEGER [primary key]
+    username VARCHAR 
+    email VARCHAR 
+    created_at DATETIME 
+    }
+
+
+
+// Relationships
+    Ref: FileLog.(cpu_log_id) < CpuLog.(id)
+    Ref: FileLog.(file_upload_id) < FileUpload.(id)
+    Ref: FileUpload.(user_id) < User.(id)

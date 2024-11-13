@@ -1,0 +1,134 @@
+about:
+  date: November 13, 2024 16:31:38
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 3
+  number_tables: 4
+info_toggle_checked: true
+resources:
+  CpuLog:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: timestamp
+      required: true
+      type: DATETIME
+    - name: usage_percent
+      required: true
+    description: Table to store CPU usage logs
+    info_list: Table to store CPU usage logs
+    tab_groups:
+    - direction: tomany
+      fks:
+      - cpu_log_id
+      name: FileLogList
+      resource: FileLog
+    type: CpuLog
+    user_key: id
+  FileLog:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: cpu_log_id
+    - name: file_upload_id
+    description: Table to correlate files with CPU logs
+    info_list: Table to correlate files with CPU logs
+    tab_groups:
+    - direction: toone
+      fks:
+      - cpu_log_id
+      name: cpu_log
+      resource: CpuLog
+    - direction: toone
+      fks:
+      - file_upload_id
+      name: file_upload
+      resource: FileUpload
+    type: FileLog
+    user_key: id
+  FileUpload:
+    attributes:
+    - label: ' filename*'
+      name: filename
+      required: true
+      search: true
+      sort: true
+    - name: user_id
+    - name: uploaded_at
+      type: DATETIME
+    - name: id
+    description: Table to store file uploads
+    info_list: Table to store file uploads
+    tab_groups:
+    - direction: tomany
+      fks:
+      - file_upload_id
+      name: FileLogList
+      resource: FileLog
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: FileUpload
+    user_key: filename
+  User:
+    attributes:
+    - label: ' username*'
+      name: username
+      required: true
+      search: true
+      sort: true
+    - name: email
+      required: true
+    - name: created_at
+      type: DATETIME
+    - name: id
+    description: Table to store user information
+    info_list: Table to store user information
+    tab_groups:
+    - direction: tomany
+      fks:
+      - user_id
+      name: FileUploadList
+      resource: FileUpload
+    type: User
+    user_key: username
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

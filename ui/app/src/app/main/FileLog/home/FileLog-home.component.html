@@ -1,0 +1,49 @@
+<o-form-layout-manager attr="FileLog" mode="tab" title="FILELOG">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="FileLogTable" 
+            service="FileLog" 
+            entity="FileLog" 
+            title="FILELOG"
+            keys="id"
+            columns="id;cpu_log_id;file_upload_id" 
+            header-actions="R;D"
+            visible-columns="id;cpu_log_id;file_upload_id"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="cpu_log_id" title="cpu_log_id">
+    <o-table-cell-renderer-service attr="cpu_log_id" 
+        service="CpuLog" entity="CpuLogType" columns="id;id"
+        parent-keys="id:cpu_log_id"
+        value-column="id" keys="cpu_log_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column attr="file_upload_id" title="file_upload_id">
+    <o-table-cell-renderer-service attr="file_upload_id" 
+        service="FileUpload" entity="FileUploadType" columns="id;filename"
+        parent-keys="id:file_upload_id"
+        value-column="filename" keys="file_upload_id"
+        visible-columns="filename" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

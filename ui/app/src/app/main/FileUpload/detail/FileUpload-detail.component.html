@@ -1,0 +1,104 @@
+<div class="container">
+<o-form-container breadcrumb="yes" breadcrumb-label-columns="filename" breadcrumb-separator=", " class="fill-form">
+      <o-form #form attr="FileUpload_form_edit" 
+        service="FileUpload" 
+        entity="FileUpload" 
+        fxLayout="column" 
+        show-header="yes" 
+        header-actions="R;I;U;D"
+        #oDetailForm keys="id" 
+        keys-sql-types="INTEGER" 
+        show-header-navigation="yes"
+        (onDataLoaded)="onDataLoaded($event)">
+
+  <o-row attr="row1" layout-align="start stretch">
+    <div fxLayout="row wrap" fxLayoutAlign="start start" fxFlex fxLayoutGap="14px">
+      
+      <o-text-input #filename attr="filename" label=" filename*" enabled="yes" required="yes" fxFlex="20%" class="form-field"></o-text-input>
+      
+      <o-list-picker 
+        attr="user_id"
+        service="User" 
+        entity="UserType"
+        fxFlex="30" 
+        query-on-init="no" 
+        query-on-bind="yes" 
+        required="no" 
+        enabled="yes" 
+        filter="yes"
+        value-column="id" 
+        value-column-type="INTEGER"  
+        keys="id" 
+        columns="id;user_id;username" 
+        title="user_id"
+        visible-columns="id;username" 
+        separator=" - " width="680px" class="form-field">
+</o-list-picker>
+      
+      <o-date-input #uploaded_at attr="uploaded_at" type="timestamp" label="uploaded_at" editable="no" required="no" format="LL" fxFlex="20%" class="form-field"></o-date-input>
+      
+      <o-integer-input #id attr="id" label="id" type="integer" editable="no" required="no" ></o-integer-input>
+      
+    </div>
+  </o-row>
+      
+      <mat-tab-group fxFill>
+        
+        <mat-tab label="FILELOG-file_upload_id">
+    <div layout-padding>
+      <o-table 
+        attr="FileLogTable" 
+        service="FileLog" 
+        entity="FileLog" 
+        keys="id"
+        parent-keys="file_upload_id:id"
+        columns="id;cpu_log_id;file_upload_id"  
+        horizontal-scroll="yes"
+        detail-form-route="FileLog" 
+        edit-form-route="FileLog"
+        visible-columns="id;cpu_log_id;file_upload_id"  
+        sort-columns="id" 
+        query-rows="25" 
+        quick-filter="yes"
+        row-height="medium" 
+        select-all-checkbox="true" 
+        pageable="yes"  
+        auto-adjust="true" 
+        virtual-scroll="yes" 
+        insert-button="yes" 
+        delete-button="yes" 
+        fixed-header="true" 
+        class="vertical-padding-8"
+        edition-mode="dblclick" 
+        horizontal-scroll="yes" class="fill-form">
+        
+          <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+        
+          <o-table-column attr="cpu_log_id" title="cpu_log_id">
+    <o-table-cell-renderer-service attr="cpu_log_id" 
+        service="CpuLog" entity="CpuLogType" columns="id;id"
+        parent-keys="id:cpu_log_id"
+        value-column="id" keys="cpu_log_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+        
+          <o-table-column attr="file_upload_id" title="file_upload_id">
+    <o-table-cell-renderer-service attr="file_upload_id" 
+        service="FileUpload" entity="FileUploadType" columns="id;filename"
+        parent-keys="id:file_upload_id"
+        value-column="filename" keys="file_upload_id"
+        visible-columns="filename" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+        
+        <o-table-paginator page-size-options="25;50;100"></o-table-paginator>
+      </o-table>
+    </div>
+</mat-tab>
+        
+      </mat-tab-group>
+      
+    </o-form>
+  </o-form-container>
+</div>

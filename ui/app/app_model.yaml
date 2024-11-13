@@ -1,0 +1,186 @@
+about:
+  date: November 13, 2024 16:31:38
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+entities:
+  CpuLog:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: timestamp
+      required: true
+      type: DATETIME
+    - name: usage_percent
+      required: true
+      template: integer
+      type: INTEGER
+    description: Table to store CPU usage logs
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store CPU usage logs
+    label: CpuLog
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - cpu_log_id
+      name: FileLogList
+      resource: FileLog
+    type: CpuLog
+  FileLog:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: cpu_log_id
+      template: integer
+      type: INTEGER
+    - name: file_upload_id
+      template: integer
+      type: INTEGER
+    description: Table to correlate files with CPU logs
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to correlate files with CPU logs
+    label: FileLog
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - cpu_log_id
+      name: cpu_log
+      resource: CpuLog
+    - direction: toone
+      fks:
+      - file_upload_id
+      name: file_upload
+      resource: FileUpload
+    type: FileLog
+  FileUpload:
+    columns:
+    - label: ' filename*'
+      name: filename
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: user_id
+      template: integer
+      type: INTEGER
+    - name: uploaded_at
+      type: DATETIME
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to store file uploads
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: filename
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store file uploads
+    label: FileUpload
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - file_upload_id
+      name: FileLogList
+      resource: FileLog
+    - direction: toone
+      fks:
+      - user_id
+      name: user
+      resource: User
+    type: FileUpload
+  User:
+    columns:
+    - label: ' username*'
+      name: username
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR
+    - name: email
+      required: true
+      template: text
+      type: VARCHAR
+    - name: created_at
+      type: DATETIME
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to store user information
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: username
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store user information
+    label: User
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - user_id
+      name: FileUploadList
+      resource: FileUpload
+    type: User
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: false
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    mode: tab
+    pick_style: list
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: false

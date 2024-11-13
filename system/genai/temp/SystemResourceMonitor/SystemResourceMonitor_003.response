@@ -1,0 +1,44 @@
+{
+    "models": [
+        {
+            "classname": "User",
+            "code": "class User(Base):\n    \"\"\"description: Table to store user information\"\"\"\n    __tablename__ = 'user'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    username = Column(String, unique=True, nullable=False)\n    email = Column(String, unique=True, nullable=False)\n    created_at = Column(DateTime, default=datetime.datetime.utcnow)",
+            "description": "Table to store user information",
+            "name": "User"
+        },
+        {
+            "classname": "FileUpload",
+            "code": "class FileUpload(Base):\n    \"\"\"description: Table to store file uploads\"\"\"\n    __tablename__ = 'file_upload'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer, ForeignKey('user.id'))\n    filename = Column(String, nullable=False)\n    uploaded_at = Column(DateTime, default=datetime.datetime.utcnow)",
+            "description": "Table to store file uploads",
+            "name": "FileUpload"
+        },
+        {
+            "classname": "CpuLog",
+            "code": "class CpuLog(Base):\n    \"\"\"description: Table to store CPU usage logs\"\"\"\n    __tablename__ = 'cpu_log'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    timestamp = Column(DateTime, nullable=False)\n    usage_percent = Column(Integer, nullable=False)",
+            "description": "Table to store CPU usage logs",
+            "name": "CpuLog"
+        },
+        {
+            "classname": "FileLog",
+            "code": "class FileLog(Base):\n    \"\"\"description: Table to correlate files with CPU logs\"\"\"\n    __tablename__ = 'file_log'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    file_upload_id = Column(Integer, ForeignKey('file_upload.id'))\n    cpu_log_id = Column(Integer, ForeignKey('cpu_log.id'))",
+            "description": "Table to correlate files with CPU logs",
+            "name": "FileLog"
+        }
+    ],
+    "rules": [
+        {
+            "name": "sum_rule",
+            "description": "Derive user's total uploads as the sum of associated FileUploads",
+            "use_case": "Calculate the total number of files a user has uploaded.",
+            "code": "Rule.count(derive=User.file_upload_count, as_count_of=FileUpload)"
+        },
+        {
+            "name": "constraint_rule",
+            "description": "Ensure the CPU log usage does not exceed 100%.",
+            "use_case": "Verify each CPU usage record is within expected bounds.",
+            "code": "Rule.constraint(validate=CpuLog, as_condition=lambda row: row.usage_percent <= 100, error_msg=\"CPU usage {row.usage_percent} exceeds 100%\")"
+        }
+    ],
+    "test_data": "from datetime import datetime, date\n\n# Users\nuser1 = User(username='user01', email='user01@example.com', created_at=datetime(2023, 1, 1))\nuser2 = User(username='user02', email='user02@example.com', created_at=datetime(2023, 2, 1))\nuser3 = User(username='user03', email='user03@example.com', created_at=datetime(2023, 3, 1))\nuser4 = User(username='user04', email='user04@example.com', created_at=datetime(2023, 4, 1))\n\n# File Uploads\nfile_upload1 = FileUpload(user_id=1, filename='report1.pdf', uploaded_at=datetime(2023, 5, 1))\nfile_upload2 = FileUpload(user_id=2, filename='report2.pdf', uploaded_at=datetime(2023, 5, 2))\nfile_upload3 = FileUpload(user_id=3, filename='report3.pdf', uploaded_at=datetime(2023, 5, 3))\nfile_upload4 = FileUpload(user_id=4, filename='report4.pdf', uploaded_at=datetime(2023, 5, 4))\n\n# CPU Logs\ncpu_log1 = CpuLog(timestamp=datetime(2023, 5, 1, 12, 0, 0), usage_percent=70)\ncpu_log2 = CpuLog(timestamp=datetime(2023, 5, 2, 12, 0, 0), usage_percent=80)\ncpu_log3 = CpuLog(timestamp=datetime(2023, 5, 3, 12, 0, 0), usage_percent=60)\ncpu_log4 = CpuLog(timestamp=datetime(2023, 5, 4, 12, 0, 0), usage_percent=90)\n\n# File Logs\nfile_log1 = FileLog(file_upload_id=1, cpu_log_id=1)\nfile_log2 = FileLog(file_upload_id=2, cpu_log_id=2)\nfile_log3 = FileLog(file_upload_id=3, cpu_log_id=3)\nfile_log4 = FileLog(file_upload_id=4, cpu_log_id=4)",
+    "name": "SystemResourceMonitor"
+}
